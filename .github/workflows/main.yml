@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  updatedb:
+       runs-on: ubuntu-latest
+       steps:
+        - uses: actions/checkout@v2
+
+        - name: Set up .NET Core
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: '6.0.x'
+            include-prerelease: false
+
+        - name: Install EF Tool
+          run: |
+            dotnet new tool-manifest
+            dotnet tool install dotnet-ef
+        - name: Apply db Migrations
+          run: |
+            dotnet tool restore
